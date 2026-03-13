@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Net-PY Dashboard</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --muted: #8b949e;
+      --text: #e6edf3;
+      --border: #30363d;
+      --accent: #2f81f7;
+      --good: #238636;
+      --warn: #d29922;
+      --bad: #da3633;
+      --chip: #21262d;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+      line-height: 1.5;
+    }
+
+    .github-badge {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    .stats {
+      grid-column: span 12;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .stat .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    button, select, textarea, input {
+      background: #0d1117;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      background: var(--chip);
+    }
+
+    button:hover { border-color: var(--accent); }
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      resize: vertical;
+      line-height: 1.4;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.92rem;
+      background: rgba(255,255,255,0.02);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .chip {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      background: var(--chip);
+      border: 1px solid var(--border);
+    }
+
+    .chip.bad { color: #ffb3b3; border-color: rgba(218,54,51,0.5); }
+    .chip.warn { color: #f2cc60; border-color: rgba(210,153,34,0.5); }
+    .chip.good { color: #7ee787; border-color: rgba(35,134,54,0.5); }
+
+    .log {
+      max-height: 420px;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      background: #0b0f14;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      white-space: pre-wrap;
+    }
+
+    .muted { color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .span-4, .span-5, .span-7, .span-8 { grid-column: span 12; }
+    }
+
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: 1fr; }
+      .container { padding: 16px; }
+      .hero h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <div>
+        <h1>Net-PY Dashboard</h1>
+        <p>
+          A simplified GitHub-style interface for your ARP monitoring project. This frontend is meant for GitHub Pages or a static site.
+          It displays trusted bindings, suspicious events, and parsed switch log entries from exported text or JSON.
+        </p>
+      </div>
+      <div class="github-badge">GitHub Pages-ready UI</div>
+    </div>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="label">Trusted Bindings</div>
+        <div class="value" id="bindingCount">2</div>
+      </div>
+      <div class="stat">
+        <div class="label">Dropped Events</div>
+        <div class="value" id="dropCount">10</div>
+      </div>
+      <div class="stat">
+        <div class="label">Spoof Alerts</div>
+        <div class="value" id="spoofCount">3</div>
+      </div>
+      <div class="stat">
+        <div class="label">Subnet Mismatches</div>
+        <div class="value" id="subnetCount">4</div>
+      </div>
+    </section>
+
+    <div class="grid" style="margin-top:16px;">
+      <section class="card span-5">
+        <h2>Project Summary</h2>
+        <p class="muted">
+          This version keeps the interface simple: one summary area, one bindings table, one dropped-events table, and one raw log viewer.
+          It is designed to sit on top of your Python script instead of replacing Scapy or the serial connection.
+        </p>
+        <div class="toolbar">
+          <button class="primary" id="loadSampleBtn">Load Sample Data</button>
+          <button id="clearBtn">Clear Events</button>
+        </div>
+        <p class="muted" style="margin-top:14px;">
+          Recommended next step: have your Python script export a JSON file, then this page can fetch and display it automatically.
+        </p>
+      </section>
+
+      <section class="card span-7">
+        <h2>Paste Switch Logs</h2>
+        <textarea id="logInput" placeholder="Paste DAI or switch log lines here..."></textarea>
+        <div class="toolbar" style="margin-top:12px;">
+          <button class="primary" id="parseBtn">Parse Logs</button>
+          <button id="clearInputBtn">Clear Input</button>
+        </div>
+        <p class="muted">The parser looks for DAI dropped events, sender IP, sender MAC, port, and timestamps.</p>
+      </section>
+
+      <section class="card span-4">
+        <h2>Trusted Bindings</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>IP</th>
+                <th>MAC</th>
+              </tr>
+            </thead>
+            <tbody id="bindingsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card span-8">
+        <h2>Dropped Events</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Port</th>
+                <th>Sender IP</th>
+                <th>Sender MAC</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody id="eventsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card span-12">
+        <h2>Raw Log Output</h2>
+        <div class="log" id="rawLog"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const trustedBindings = [
+      { ip: '192.168.1.254', mac: 'D8:CB:8A:60:97:88' },
+      { ip: '192.168.1.119', mac: 'A8:A1:59:60:49:23' }
+    ];
+
+    const sampleEvents = [
+      {
+        time: '20:52:53',
+        port: 'Gi1/0/5',
+        senderIp: '192.168.1.117',
+        senderMac: 'D8:CB:8A:60:97:88',
+        reason: 'Gateway MAC spoof / DHCP snooping mismatch'
+      },
+      {
+        time: '21:36:41',
+        port: 'Gi1/0/9',
+        senderIp: '192.168.86.1',
+        senderMac: '08:B4:B1:FE:72:7A',
+        reason: 'Subnet mismatch / no DHCP binding'
+      },
+      {
+        time: '05:32:37',
+        port: 'Gi1/0/3',
+        senderIp: '0.0.0.0',
+        senderMac: 'A8:A1:59:60:49:23',
+        reason: 'ARP probe before DHCP binding'
+      }
+    ];
+
+    let events = [...sampleEvents];
+
+    function renderBindings() {
+      const body = document.getElementById('bindingsBody');
+      body.innerHTML = trustedBindings.map(item => `
+        <tr>
+          <td>${item.ip}</td>
+          <td>${item.mac}</td>
+        </tr>
+      `).join('');
+      document.getElementById('bindingCount').textContent = trustedBindings.length;
+    }
+
+    function reasonChip(reason) {
+      const lower = reason.toLowerCase();
+      if (lower.includes('spoof')) return '<span class="chip bad">Spoof</span>';
+      if (lower.includes('subnet')) return '<span class="chip warn">Subnet</span>';
+      if (lower.includes('probe')) return '<span class="chip good">Probe</span>';
+      return '<span class="chip">Event</span>';
+    }
+
+    function renderEvents() {
+      const body = document.getElementById('eventsBody');
+      body.innerHTML = events.map(item => `
+        <tr>
+          <td>${item.time}</td>
+          <td>${item.port}</td>
+          <td>${item.senderIp}</td>
+          <td>${item.senderMac}</td>
+          <td>${reasonChip(item.reason)} ${item.reason}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('dropCount').textContent = events.length;
+      document.getElementById('spoofCount').textContent = events.filter(e => e.reason.toLowerCase().includes('spoof')).length;
+      document.getElementById('subnetCount').textContent = events.filter(e => e.reason.toLowerCase().includes('subnet')).length;
+    }
+
+    function renderRawLog(lines) {
+      document.getElementById('rawLog').textContent = lines.length ? lines.join('\n') : 'No logs loaded.';
+    }
+
+    function classifyEvent(senderIp, senderMac) {
+      if (senderMac.toUpperCase() === 'D8:CB:8A:60:97:88' && senderIp !== '192.168.1.254') {
+        return 'Gateway MAC spoof / DHCP snooping mismatch';
+      }
+      if (senderIp === '0.0.0.0') {
+        return 'ARP probe before DHCP binding';
+      }
+      if (!senderIp.startsWith('192.168.1.') && senderIp !== '0.0.0.0') {
+        return 'Subnet mismatch / no DHCP binding';
+      }
+      return 'DHCP snooping database mismatch';
+    }
+
+    function parseLogs(text) {
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      const parsed = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line.includes('DAI dropped ARP frame')) continue;
+
+        const timeMatch = line.match(/Mar\s+\d+\s+(\d{2}:\d{2}:\d{2})/);
+        const portMatch = line.match(/i\/f\s+(Gi\d\/\d\/\d+)/);
+
+        let senderIp = '';
+        let senderMac = '';
+        for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+          const arpLine = lines[j];
+          const arpMatch = arpLine.match(/sender mac\s+([0-9A-F:]+),\s+sender ip\s+([0-9.]+)/i);
+          if (arpMatch) {
+            senderMac = arpMatch[1].toUpperCase();
+            senderIp = arpMatch[2];
+            break;
+          }
+        }
+
+        parsed.push({
+          time: timeMatch ? timeMatch[1] : 'Unknown',
+          port: portMatch ? portMatch[1] : 'Unknown',
+          senderIp: senderIp || 'Unknown',
+          senderMac: senderMac || 'Unknown',
+          reason: classifyEvent(senderIp || '', senderMac || '')
+        });
+      }
+
+      return { parsed, lines };
+    }
+
+    document.getElementById('loadSampleBtn').addEventListener('click', () => {
+      events = [...sampleEvents];
+      renderEvents();
+      renderRawLog([
+        'Loaded sample Net-PY dashboard data.',
+        'Use Parse Logs to convert switch log text into dropped-event rows.'
+      ]);
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      events = [];
+      renderEvents();
+      renderRawLog([]);
+    });
+
+    document.getElementById('clearInputBtn').addEventListener('click', () => {
+      document.getElementById('logInput').value = '';
+    });
+
+    document.getElementById('parseBtn').addEventListener('click', () => {
+      const text = document.getElementById('logInput').value.trim();
+      if (!text) return;
+      const result = parseLogs(text);
+      events = result.parsed;
+      renderEvents();
+      renderRawLog(result.lines);
+    });
+
+    renderBindings();
+    renderEvents();
+    renderRawLog(['Net-PY Dashboard ready.']);
+  </script>
+</body>
+</html>
