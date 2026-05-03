@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Net-PY Demo Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body class="login-page">
+  <div class="login-shell">
+    <section class="login-hero">
+      <div class="login-brand"><span class="brand-dot"></span> Net-PY</div>
+      <div class="eyebrow">Demo Login</div>
+      <h1>Sign in to open the Net-PY dashboard preview.</h1>
+      <p>This is a static GitHub demo page. It mirrors the login flow, then takes you into the interactive dashboard preview.</p>
+      <div class="login-meta">
+        <div class="login-meta-card">
+          <span>Username</span>
+          <strong>admin</strong>
+        </div>
+        <div class="login-meta-card">
+          <span>Password</span>
+          <strong>netpy2024</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="login-card">
+      <h2>Open Dashboard</h2>
+      <p>Enter the demo credentials or continue directly to the dashboard preview.</p>
+      <form class="login-form" action="./index.html">
+        <label for="user">Username</label>
+        <input id="user" type="text" value="admin">
+        <label for="pass">Password</label>
+        <input id="pass" type="password" value="netpy2024">
+        <button class="btn btn-accent login-button" type="submit">Open Net-PY Demo</button>
+      </form>
+      <a class="login-link" href="./index.html">Skip to dashboard preview</a>
+    </section>
+  </div>
+</body>
+</html>

@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Net-PY Interactive Demo</title>
+<title>Net-PY Demo Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -14,8 +14,8 @@
       <section class="dashboard-section" id="dashboard">
         <div class="section-intro demo-intro">
           <div class="eyebrow">Interactive Demo</div>
-          <h2>Net-PY wireframe demo screens</h2>
-          <p></p>
+          <h2>Net-PY dashboard preview</h2>
+          <p>Static GitHub demo with the monitoring screens only. Use the separate login page before entering the main dashboard.</p>
         </div>
 
         <div class="app-shell">
@@ -33,7 +33,7 @@
               <span class="status-chip active"><span class="status-dot"></span>sniffing</span>
             </div>
             <div class="app-right">
-              <span class="top-timestamp" id="demoUpdated">Updated: 2026-04-28 17:46:33</span>
+              <span class="top-timestamp" id="demoUpdated">Updated: 2026-05-03 17:46:33</span>
               <span class="user-pill">admin</span>
             </div>
           </header>
@@ -41,13 +41,8 @@
           <div class="app-layout">
             <aside class="app-sidebar">
               <div class="sidebar-group">
-                <div class="sidebar-label">Access</div>
-                <button class="nav-item active" data-demo-view="login">Login</button>
-                <button class="nav-item" data-demo-view="admin">Admin</button>
-              </div>
-              <div class="sidebar-group">
                 <div class="sidebar-label">Monitor</div>
-                <button class="nav-item" data-demo-view="overview">Overview</button>
+                <button class="nav-item active" data-demo-view="overview">Overview</button>
                 <button class="nav-item" data-demo-view="devices">Devices</button>
                 <button class="nav-item" data-demo-view="alerts">Alerts</button>
                 <button class="nav-item" data-demo-view="events">Events</button>
@@ -61,9 +56,7 @@
             </aside>
 
             <div class="app-content">
-              <section class="demo-view active" id="demo-login"></section>
-              <section class="demo-view" id="demo-admin"></section>
-              <section class="demo-view" id="demo-overview"></section>
+              <section class="demo-view active" id="demo-overview"></section>
               <section class="demo-view" id="demo-devices"></section>
               <section class="demo-view" id="demo-alerts"></section>
               <section class="demo-view" id="demo-events"></section>

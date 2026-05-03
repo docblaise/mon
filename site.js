@@ -1,5 +1,5 @@
 const demoData = {
-  updated: "2026-04-28 17:46:33",
+  updated: "2026-05-03 17:46:33",
   trustedBindings: [
     { ip: "192.168.1.254", mac: "50:95:51:93:A2:C8" },
     { ip: "192.168.1.119", mac: "A8:A1:59:60:49:23" }
@@ -36,7 +36,7 @@ const demoData = {
     {
       label: "Network Scan",
       status: "done",
-      started: "2026-04-28 17:46:00",
+      started: "2026-05-03 17:46:00",
       cmd: "nmap -O --osscan-limit -PR 192.168.1.0/24",
       output:
 `Nmap scan report for 192.168.1.254
@@ -49,21 +49,11 @@ Host is up (0.00080s latency).
 MAC Address: A8:A1:59:60:49:23 (Raspberry Pi)
 OS details: Linux 5.X`
     }
-  ],
-  adminUsers: [
-    { user: "admin", role: "Administrator", status: "active", lastLogin: "2026-04-28 17:45:58" },
-    { user: "observer", role: "Read Only", status: "active", lastLogin: "2026-04-28 16:18:11" },
-    { user: "lab-ops", role: "Operator", status: "pending", lastLogin: "2026-04-27 10:42:05" }
-  ],
-  adminAudit: [
-    { time: "17:45:58", action: "login", actor: "admin", detail: "Authenticated to dashboard" },
-    { time: "17:44:12", action: "switch_nic", actor: "admin", detail: "Changed capture interface to Ethernet" },
-    { time: "17:42:03", action: "clear_events", actor: "admin", detail: "Cleared dropped event history" }
   ]
 };
 
 const state = {
-  view: "login",
+  view: "overview",
   filter: "all"
 };
 
@@ -103,90 +93,6 @@ function setFilter(filter) {
     button.classList.toggle("active", button.dataset.filter === filter);
   });
   renderDevices();
-}
-
-function renderLogin() {
-  el("demo-login").innerHTML = `
-    <div class="login-demo">
-      <div class="login-hero">
-        <div class="eyebrow">Access Screen</div>
-        <h2 class="section-title">Login</h2>
-        <p class="section-subtitle">Simple operator sign-in screen for the Net-PY dashboard.</p>
-        <div class="login-note-card">
-          <strong>Default Demo User</strong>
-          <span>Username: admin</span>
-          <span>Password: netpy2024</span>
-        </div>
-      </div>
-      <div class="login-card-demo">
-        <div class="login-brand-demo">net-py</div>
-        <div class="login-subtitle-demo">authenticate to continue</div>
-        <div class="login-form-demo">
-          <label>Username</label>
-          <input class="search-input" type="text" value="admin" readonly>
-          <label>Password</label>
-          <input class="search-input" type="password" value="netpy2024" readonly>
-          <button class="btn btn-accent demo-button-full" onclick="setView('overview')">Open Dashboard</button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderAdmin() {
-  const users = demoData.adminUsers.map(user => rowHtml([
-    esc(user.user),
-    esc(user.role),
-    `<span class="status-${user.status === "active" ? "trusted" : user.status === "pending" ? "new" : "alert"}">${esc(user.status)}</span>`,
-    esc(user.lastLogin)
-  ]));
-  const audit = demoData.adminAudit.map(item => rowHtml([
-    esc(item.time),
-    esc(item.action),
-    esc(item.actor),
-    `<span class="wrap">${esc(item.detail)}</span>`
-  ]));
-
-  el("demo-admin").innerHTML = `
-    <div class="section-header">
-      <div>
-        <h2 class="section-title">Admin</h2>
-        <div class="section-subtitle">Manage access, review audit activity, and monitor platform state.</div>
-      </div>
-      <div class="section-tools">
-        <span class="btn btn-ghost">Add User</span>
-        <span class="btn btn-accent">Export Audit</span>
-      </div>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-label">Users</div><div class="stat-value">3</div></div>
-      <div class="stat-card"><div class="stat-label">Active Sessions</div><div class="stat-value">2</div></div>
-      <div class="stat-card"><div class="stat-label">Pending Access</div><div class="stat-value">1</div></div>
-      <div class="stat-card"><div class="stat-label">Audit Entries</div><div class="stat-value">${demoData.adminAudit.length}</div></div>
-    </div>
-
-    <div class="overview-grid">
-      <div class="stack">
-        <div class="panel">
-          <div class="panel-head">
-            <div class="panel-title">User Access</div>
-            <div class="panel-note">role and session overview</div>
-          </div>
-          ${wrapTable(["User", "Role", "Status", "Last Login"], users)}
-        </div>
-      </div>
-      <div class="stack">
-        <div class="panel">
-          <div class="panel-head">
-            <div class="panel-title">Audit Log</div>
-            <div class="panel-note">latest admin actions</div>
-          </div>
-          ${wrapTable(["Time", "Action", "Actor", "Detail"], audit, true)}
-        </div>
-      </div>
-    </div>
-  `;
 }
 
 function renderOverview() {
@@ -425,8 +331,6 @@ function renderSettings() {
 
 function renderAll() {
   el("demoUpdated").textContent = `Updated: ${demoData.updated}`;
-  renderLogin();
-  renderAdmin();
   renderOverview();
   renderDevices();
   renderAlerts();
@@ -443,4 +347,4 @@ document.querySelectorAll("[data-demo-view]").forEach(button => {
 el("demoNic").addEventListener("change", renderSettings);
 
 renderAll();
-setView("login");
+setView("overview");
