@@ -3,73 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Net-PY Demo Dashboard</title>
+<title>Net-PY Demo Login</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
+<style>
+  .login-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: none;
+  }
+  .login-error.show {
+    display: block;
+  }
+</style>
 </head>
-<body>
-  <div class="site-shell demo-only">
-    <main class="demo-main">
-      <section class="dashboard-section" id="dashboard">
-        <div class="section-intro demo-intro">
-          <div class="eyebrow">Interactive Demo</div>
-          <h2>Net-PY dashboard preview</h2>
-          <p>Static GitHub demo with the monitoring screens only. Use the separate login page before entering the main dashboard.</p>
+<body class="login-page">
+  <div class="login-shell">
+    <section class="login-hero">
+      <div class="login-brand"><span class="brand-dot"></span> Net-PY</div>
+      <div class="eyebrow">Demo Login</div>
+      <h1>Sign in to open the Net-PY dashboard preview.</h1>
+      <p>This is a static GitHub demo page. It mirrors the login flow, then takes you into the interactive dashboard preview.</p>
+      <div class="login-meta">
+        <div class="login-meta-card">
+          <span>Username</span>
+          <strong>admin</strong>
         </div>
-
-        <div class="app-shell">
-          <header class="app-topbar">
-            <div class="app-left">
-              <div class="brand"><span class="brand-dot"></span> Net-PY</div>
-              <div class="top-meta">
-                <span class="meta-label">NIC</span>
-                <select id="demoNic" class="demo-select">
-                  <option>Ethernet (192.168.1.119)</option>
-                  <option>Network Bridge (192.168.86.20)</option>
-                  <option>Wi-Fi (192.168.0.44)</option>
-                </select>
-              </div>
-              <span class="status-chip active"><span class="status-dot"></span>sniffing</span>
-            </div>
-            <div class="app-right">
-              <span class="top-timestamp" id="demoUpdated">Updated: 2026-05-03 17:46:33</span>
-              <span class="user-pill">admin</span>
-            </div>
-          </header>
-
-          <div class="app-layout">
-            <aside class="app-sidebar">
-              <div class="sidebar-group">
-                <div class="sidebar-label">Monitor</div>
-                <button class="nav-item active" data-demo-view="overview">Overview</button>
-                <button class="nav-item" data-demo-view="devices">Devices</button>
-                <button class="nav-item" data-demo-view="alerts">Alerts</button>
-                <button class="nav-item" data-demo-view="events">Events</button>
-                <button class="nav-item" data-demo-view="syslog">Syslog</button>
-              </div>
-              <div class="sidebar-group">
-                <div class="sidebar-label">Tools</div>
-                <button class="nav-item" data-demo-view="scan">Scan</button>
-                <button class="nav-item" data-demo-view="settings">Settings</button>
-              </div>
-            </aside>
-
-            <div class="app-content">
-              <section class="demo-view active" id="demo-overview"></section>
-              <section class="demo-view" id="demo-devices"></section>
-              <section class="demo-view" id="demo-alerts"></section>
-              <section class="demo-view" id="demo-events"></section>
-              <section class="demo-view" id="demo-syslog"></section>
-              <section class="demo-view" id="demo-scan"></section>
-              <section class="demo-view" id="demo-settings"></section>
-            </div>
-          </div>
+        <div class="login-meta-card">
+          <span>Password</span>
+          <strong>netpy2024</strong>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
+
+    <section class="login-card">
+      <h2>Open Dashboard</h2>
+      <p>Enter the demo credentials or continue directly to the dashboard preview.</p>
+      <form class="login-form" id="loginForm">
+        <label for="user">Username</label>
+        <input id="user" type="text" placeholder="admin">
+        <label for="pass">Password</label>
+        <input id="pass" type="password" placeholder="netpy2024">
+        <div class="login-error" id="errorMessage">Invalid username or password. Please try again.</div>
+        <button class="btn btn-accent login-button" type="submit">Open Net-PY Demo</button>
+      </form>
+      <a class="login-link" href="./dashboard.html">Skip to dashboard preview</a>
+    </section>
   </div>
 
-  <script src="./site.js"></script>
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const userInput = document.getElementById('user');
+    const passInput = document.getElementById('pass');
+    const errorMessage = document.getElementById('errorMessage');
+
+    const VALID_USERNAME = 'admin';
+    const VALID_PASSWORD = 'netpy2024';
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = userInput.value.trim();
+      const password = passInput.value.trim();
+
+      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+        // Credentials are valid - navigate to dashboard
+        errorMessage.classList.remove('show');
+        window.location.href = './dashboard.html';
+      } else {
+        // Credentials are invalid - show error
+        errorMessage.classList.add('show');
+        passInput.value = '';
+        passInput.focus();
+      }
+    });
+  </script>
 </body>
 </html>
