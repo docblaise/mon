@@ -14,6 +14,16 @@ const demoData = {
     { name: "", ip: "192.168.1.37", mac: "CC:50:E3:E5:68:70", type: "ESP32", status: "alert", firstSeen: "17:37:19", lastSeen: "17:45:49" },
     { name: "", ip: "192.168.1.31", mac: "4A:83:FE:36:46:1B", type: "Host", status: "known", firstSeen: "17:41:38", lastSeen: "17:42:29" }
   ],
+  devicesBackup: [
+    { name: "Router", ip: "192.168.1.254", mac: "50:95:51:93:A2:C8", type: "Router", status: "trusted", firstSeen: "17:10:02", lastSeen: "17:46:31" },
+    { name: "Raspberry Pi", ip: "192.168.1.119", mac: "A8:A1:59:60:49:23", type: "Host", status: "trusted", firstSeen: "17:12:41", lastSeen: "17:46:33" },
+    { name: "", ip: "192.168.1.172", mac: "E8:68:E7:48:E9:74", type: "AP", status: "known", firstSeen: "17:18:07", lastSeen: "17:46:20" },
+    { name: "", ip: "192.168.1.217", mac: "78:83:9F:6A:40:49", type: "Laptop", status: "known", firstSeen: "17:20:13", lastSeen: "17:46:18" },
+    { name: "", ip: "192.168.1.58", mac: "4C:F3:E0:F1:98:64", type: "ESP32", status: "new", firstSeen: "17:34:48", lastSeen: "17:45:59" },
+    { name: "", ip: "192.168.1.42", mac: "84:C0:EF:1E:A8:4E", type: "IoT Device", status: "new", firstSeen: "17:31:02", lastSeen: "17:46:03" },
+    { name: "", ip: "192.168.1.37", mac: "CC:50:E3:E5:68:70", type: "ESP32", status: "alert", firstSeen: "17:37:19", lastSeen: "17:45:49" },
+    { name: "", ip: "192.168.1.31", mac: "4A:83:FE:36:46:1B", type: "Host", status: "known", firstSeen: "17:41:38", lastSeen: "17:42:29" }
+  ],
   alerts: [
     { time: "17:46:25", type: "new_device", ip: "192.168.1.192", mac: "E0:62:34:F9:C8:BD", message: "New device connected" },
     { time: "17:46:26", type: "new_device", ip: "192.168.1.172", mac: "E8:68:E7:48:E9:74", message: "New device connected" },
@@ -27,6 +37,12 @@ const demoData = {
     { time: "17:41:35", port: "LIVE", senderIp: "192.168.86.41", senderMac: "84:F3:EB:F1:39:24", reason: "Subnet mismatch" }
   ],
   syslog: [
+    { time: "17:44:10", source: "sw-core", message: "%SW_DAI-4-DHCP_SNOOPING_DENY: 1 Invalid ARPs (Req) on Vlan 1, from 84:C0:EF:1E:A8:4E/192.168.1.42 to ff:ff:ff:ff:ff:ff/192.168.1.1" },
+    { time: "17:44:10", source: "sw-core", message: "Ethernet src 84:C0:EF:1E:A8:4E dst ff:ff:ff:ff:ff:ff" },
+    { time: "17:44:10", source: "sw-core", message: "ARP request from 192.168.1.42 for 192.168.1.1 vlan 1" },
+    { time: "17:45:03", source: "sw-edge", message: "%LINK-3-UPDOWN: Interface Gi0/1, changed state to up" }
+  ],
+  syslogBackup: [
     { time: "17:44:10", source: "sw-core", message: "%SW_DAI-4-DHCP_SNOOPING_DENY: 1 Invalid ARPs (Req) on Vlan 1, from 84:C0:EF:1E:A8:4E/192.168.1.42 to ff:ff:ff:ff:ff:ff/192.168.1.1" },
     { time: "17:44:10", source: "sw-core", message: "Ethernet src 84:C0:EF:1E:A8:4E dst ff:ff:ff:ff:ff:ff" },
     { time: "17:44:10", source: "sw-core", message: "ARP request from 192.168.1.42 for 192.168.1.1 vlan 1" },
@@ -292,6 +308,7 @@ function renderScan() {
         <input id="scanInput" class="search-input" type="text" value="192.168.1.0/24" readonly>
         <button id="runScanBtn" class="btn btn-accent">Run Network Scan</button>
         <button id="clearScanBtn" class="btn btn-ghost">Clear Results</button>
+        <button id="resetDataBtn" class="btn btn-ghost">Reset All Data</button>
       </div>
 
       <div id="scanResults" class="scan-results">
@@ -352,6 +369,20 @@ Scan completed at ${new Date().toLocaleTimeString()}`
 
   el("clearScanBtn").addEventListener("click", () => {
     el("scanResults").innerHTML = '';
+  });
+
+  el("resetDataBtn").addEventListener("click", () => {
+    // Clear devices, restore from backup, clear names
+    demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
+    
+    // Clear syslog
+    demoData.syslog = [];
+    
+    // Clear scan results
+    el("scanResults").innerHTML = '';
+    
+    // Re-render all views
+    renderAll();
   });
 }
 
