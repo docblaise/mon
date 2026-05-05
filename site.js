@@ -30,7 +30,19 @@ const demoData = {
     { time: "17:46:30", type: "new_device", ip: "192.168.1.217", mac: "78:83:9F:6A:40:49", message: "New device connected" },
     { time: "17:46:33", type: "new_device", ip: "192.168.1.119", mac: "A8:A1:59:60:49:23", message: "New device connected" }
   ],
+  alertsBackup: [
+    { time: "17:46:25", type: "new_device", ip: "192.168.1.192", mac: "E0:62:34:F9:C8:BD", message: "New device connected" },
+    { time: "17:46:26", type: "new_device", ip: "192.168.1.172", mac: "E8:68:E7:48:E9:74", message: "New device connected" },
+    { time: "17:46:30", type: "new_device", ip: "192.168.1.217", mac: "78:83:9F:6A:40:49", message: "New device connected" },
+    { time: "17:46:33", type: "new_device", ip: "192.168.1.119", mac: "A8:A1:59:60:49:23", message: "New device connected" }
+  ],
   events: [
+    { time: "17:41:30", port: "LIVE", senderIp: "192.168.86.38", senderMac: "84:F3:EB:F1:98:E4", reason: "Subnet mismatch" },
+    { time: "17:41:30", port: "LIVE", senderIp: "192.168.86.42", senderMac: "84:C0:EF:1E:A8:4E", reason: "Subnet mismatch" },
+    { time: "17:41:33", port: "LIVE", senderIp: "192.168.86.37", senderMac: "CC:50:E3:E5:68:70", reason: "Subnet mismatch" },
+    { time: "17:41:35", port: "LIVE", senderIp: "192.168.86.41", senderMac: "84:F3:EB:F1:39:24", reason: "Subnet mismatch" }
+  ],
+  eventsBackup: [
     { time: "17:41:30", port: "LIVE", senderIp: "192.168.86.38", senderMac: "84:F3:EB:F1:98:E4", reason: "Subnet mismatch" },
     { time: "17:41:30", port: "LIVE", senderIp: "192.168.86.42", senderMac: "84:C0:EF:1E:A8:4E", reason: "Subnet mismatch" },
     { time: "17:41:33", port: "LIVE", senderIp: "192.168.86.37", senderMac: "CC:50:E3:E5:68:70", reason: "Subnet mismatch" },
@@ -128,6 +140,9 @@ function renderOverview() {
         <h2 class="section-title">Overview</h2>
         <div class="section-subtitle">Live summary of trusted bindings, devices, alerts, and suspicious activity.</div>
       </div>
+      <div class="section-tools">
+        <button id="resetOverviewBtn" class="btn btn-ghost">Reset</button>
+      </div>
     </div>
 
     <div class="stats-grid">
@@ -170,6 +185,14 @@ function renderOverview() {
       </div>
     </div>
   `;
+
+  el("resetOverviewBtn").addEventListener("click", () => {
+    demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
+    demoData.alerts = [];
+    demoData.events = [];
+    demoData.syslog = [];
+    renderAll();
+  });
 }
 
 function renderDevices() {
@@ -202,6 +225,7 @@ function renderDevices() {
       </div>
       <div class="section-tools">
         <span class="btn btn-ghost">Scan Now</span>
+        <button id="resetDevicesBtn" class="btn btn-ghost">Reset</button>
       </div>
     </div>
 
@@ -235,6 +259,11 @@ function renderDevices() {
   document.querySelectorAll("[data-filter]").forEach(button => {
     button.addEventListener("click", () => setFilter(button.dataset.filter));
   });
+
+  el("resetDevicesBtn").addEventListener("click", () => {
+    demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
+    renderDevices();
+  });
 }
 
 function renderAlerts() {
@@ -244,6 +273,9 @@ function renderAlerts() {
         <h2 class="section-title">Alerts</h2>
         <div class="section-subtitle">Recent new-device alerts and network notices.</div>
       </div>
+      <div class="section-tools">
+        <button id="resetAlertsBtn" class="btn btn-ghost">Reset</button>
+      </div>
     </div>
     ${wrapTable(
       ["Time", "Type", "IP", "MAC", "Message"],
@@ -251,6 +283,11 @@ function renderAlerts() {
       true
     )}
   `;
+
+  el("resetAlertsBtn").addEventListener("click", () => {
+    demoData.alerts = [];
+    renderAlerts();
+  });
 }
 
 function renderEvents() {
@@ -260,6 +297,9 @@ function renderEvents() {
         <h2 class="section-title">Events</h2>
         <div class="section-subtitle">Sample suspicious and DAI-related event data.</div>
       </div>
+      <div class="section-tools">
+        <button id="resetEventsBtn" class="btn btn-ghost">Reset</button>
+      </div>
     </div>
     ${wrapTable(
       ["Time", "Port", "Sender IP", "Sender MAC", "Reason"],
@@ -267,6 +307,11 @@ function renderEvents() {
       true
     )}
   `;
+
+  el("resetEventsBtn").addEventListener("click", () => {
+    demoData.events = [];
+    renderEvents();
+  });
 }
 
 function renderSyslog() {
@@ -276,6 +321,9 @@ function renderSyslog() {
         <h2 class="section-title">Syslog Feed</h2>
         <div class="section-subtitle">Example switch syslog entries captured by Net-PY.</div>
       </div>
+      <div class="section-tools">
+        <button id="resetSyslogBtn" class="btn btn-ghost">Reset</button>
+      </div>
     </div>
     ${wrapTable(
       ["Time", "Source", "Message"],
@@ -283,6 +331,11 @@ function renderSyslog() {
       true
     )}
   `;
+
+  el("resetSyslogBtn").addEventListener("click", () => {
+    demoData.syslog = [];
+    renderSyslog();
+  });
 }
 
 function renderScan() {
@@ -377,6 +430,10 @@ Scan completed at ${new Date().toLocaleTimeString()}`
     
     // Clear syslog
     demoData.syslog = [];
+    
+    // Clear alerts and events
+    demoData.alerts = [];
+    demoData.events = [];
     
     // Clear scan results
     el("scanResults").innerHTML = '';
