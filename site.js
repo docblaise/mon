@@ -74,7 +74,7 @@ function emptyRow(message, cols) {
 }
 
 function wrapTable(headers, rows, scroll = false) {
-  return `<div class="table-panel"><div class="table-wrap${scroll ? " scroll" : ""}"><table><thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.length ? rows.join("") : emptyRow("No data", headers.length)}</tbody></table></div></div>`;
+  return `<div class="table-panel"><div class="table-wrap${scroll ? " scroll" : ""}"><table><thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.length ? rows.join("") : emptyRow("No data available", headers.length)}</tbody></table></div></div>`;
 }
 
 function setView(view) {
@@ -289,11 +289,12 @@ function renderScan() {
       </div>
 
       <div class="scan-controls">
-        <input class="search-input" type="text" value="192.168.1.0/24" readonly>
-        <span class="btn btn-accent">Run Network Scan</span>
+        <input id="scanInput" class="search-input" type="text" value="192.168.1.0/24" readonly>
+        <button id="runScanBtn" class="btn btn-accent">Run Network Scan</button>
+        <button id="clearScanBtn" class="btn btn-ghost">Clear Results</button>
       </div>
 
-      <div class="scan-results">
+      <div id="scanResults" class="scan-results">
         <div class="scan-result">
           <div class="scan-head">
             <div class="scan-meta">
@@ -310,6 +311,48 @@ function renderScan() {
       </div>
     </div>
   `;
+
+  // Add event listeners
+  el("runScanBtn").addEventListener("click", () => {
+    const scanResultsDiv = el("scanResults");
+    const newScan = {
+      label: "Network Scan",
+      status: "done",
+      started: new Date().toLocaleString(),
+      cmd: "nmap -O --osscan-limit -PR 192.168.1.0/24",
+      output: `Nmap scan report for 192.168.1.254
+Host is up (0.0010s latency).
+MAC Address: 50:95:51:93:A2:C8 (Router)
+Device type: broadband router
+
+Nmap scan report for 192.168.1.119
+Host is up (0.00080s latency).
+MAC Address: A8:A1:59:60:49:23 (Raspberry Pi)
+OS details: Linux 5.X
+
+Scan completed at ${new Date().toLocaleTimeString()}`
+    };
+    
+    scanResultsDiv.innerHTML += `
+      <div class="scan-result">
+        <div class="scan-head">
+          <div class="scan-meta">
+            <span class="scan-status done">${esc(newScan.status)}</span>
+            <span>${esc(newScan.label)}</span>
+            <span>${esc(newScan.cmd)}</span>
+          </div>
+          <span class="top-timestamp">${esc(newScan.started)}</span>
+        </div>
+        <div class="scan-output">
+          <pre>${esc(newScan.output)}</pre>
+        </div>
+      </div>
+    `;
+  });
+
+  el("clearScanBtn").addEventListener("click", () => {
+    el("scanResults").innerHTML = '';
+  });
 }
 
 function renderSettings() {
