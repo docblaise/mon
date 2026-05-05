@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Net-PY Demo Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="site-shell demo-only">
+    <main class="demo-main">
+      <section class="dashboard-section" id="dashboard">
+        <div class="section-intro demo-intro">
+          <div class="eyebrow">Interactive Demo</div>
+          <h2>Net-PY dashboard preview</h2>
+          <p>Static GitHub demo with the monitoring screens only. Use the separate login page before entering the main dashboard.</p>
+        </div>
+
+        <div class="app-shell">
+          <header class="app-topbar">
+            <div class="app-left">
+              <div class="brand"><span class="brand-dot"></span> Net-PY</div>
+              <div class="top-meta">
+                <span class="meta-label">NIC</span>
+                <select id="demoNic" class="demo-select">
+                  <option>Ethernet (192.168.1.119)</option>
+                  <option>Network Bridge (192.168.86.20)</option>
+                  <option>Wi-Fi (192.168.0.44)</option>
+                </select>
+              </div>
+              <span class="status-chip active"><span class="status-dot"></span>sniffing</span>
+            </div>
+            <div class="app-right">
+              <span class="top-timestamp" id="demoUpdated">Updated: 2026-05-03 17:46:33</span>
+              <span class="user-pill">admin</span>
+            </div>
+          </header>
+
+          <div class="app-layout">
+            <aside class="app-sidebar">
+              <div class="sidebar-group">
+                <div class="sidebar-label">Monitor</div>
+                <button class="nav-item active" data-demo-view="overview">Overview</button>
+                <button class="nav-item" data-demo-view="devices">Devices</button>
+                <button class="nav-item" data-demo-view="alerts">Alerts</button>
+                <button class="nav-item" data-demo-view="events">Events</button>
+                <button class="nav-item" data-demo-view="syslog">Syslog</button>
+              </div>
+              <div class="sidebar-group">
+                <div class="sidebar-label">Tools</div>
+                <button class="nav-item" data-demo-view="scan">Scan</button>
+                <button class="nav-item" data-demo-view="settings">Settings</button>
+              </div>
+            </aside>
+
+            <div class="app-content">
+              <section class="demo-view active" id="demo-overview"></section>
+              <section class="demo-view" id="demo-devices"></section>
+              <section class="demo-view" id="demo-alerts"></section>
+              <section class="demo-view" id="demo-events"></section>
+              <section class="demo-view" id="demo-syslog"></section>
+              <section class="demo-view" id="demo-scan"></section>
+              <section class="demo-view" id="demo-settings"></section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./site.js"></script>
+</body>
+</html>
