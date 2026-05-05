@@ -7,6 +7,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
+<style>
+  .login-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: none;
+  }
+  .login-error.show {
+    display: block;
+  }
+</style>
 </head>
 <body class="login-page">
   <div class="login-shell">
@@ -30,15 +41,44 @@
     <section class="login-card">
       <h2>Open Dashboard</h2>
       <p>Enter the demo credentials or continue directly to the dashboard preview.</p>
-      <form class="login-form" action="./index.html">
+      <form class="login-form" id="loginForm">
         <label for="user">Username</label>
-        <input id="user" type="text" value="admin">
+        <input id="user" type="text" placeholder="admin">
         <label for="pass">Password</label>
-        <input id="pass" type="password" value="netpy2024">
+        <input id="pass" type="password" placeholder="netpy2024">
+        <div class="login-error" id="errorMessage">Invalid username or password. Please try again.</div>
         <button class="btn btn-accent login-button" type="submit">Open Net-PY Demo</button>
       </form>
       <a class="login-link" href="./index.html">Skip to dashboard preview</a>
     </section>
   </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const userInput = document.getElementById('user');
+    const passInput = document.getElementById('pass');
+    const errorMessage = document.getElementById('errorMessage');
+
+    const VALID_USERNAME = 'admin';
+    const VALID_PASSWORD = 'netpy2024';
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = userInput.value.trim();
+      const password = passInput.value.trim();
+
+      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+        // Credentials are valid - navigate to dashboard
+        errorMessage.classList.remove('show');
+        window.location.href = './index.html';
+      } else {
+        // Credentials are invalid - show error
+        errorMessage.classList.add('show');
+        passInput.value = '';
+        passInput.focus();
+      }
+    });
+  </script>
 </body>
 </html>
