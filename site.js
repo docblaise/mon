@@ -30,31 +30,13 @@ const demoData = {
     { time: "17:46:30", type: "new_device", ip: "192.168.1.217", mac: "78:83:9F:6A:40:49", message: "New device connected" },
     { time: "17:46:33", type: "new_device", ip: "192.168.1.119", mac: "A8:A1:59:60:49:23", message: "New device connected" }
   ],
-  alertsBackup: [
-    { time: "17:46:25", type: "new_device", ip: "192.168.1.192", mac: "E0:62:34:F9:C8:BD", message: "New device connected" },
-    { time: "17:46:26", type: "new_device", ip: "192.168.1.172", mac: "E8:68:E7:48:E9:74", message: "New device connected" },
-    { time: "17:46:30", type: "new_device", ip: "192.168.1.217", mac: "78:83:9F:6A:40:49", message: "New device connected" },
-    { time: "17:46:33", type: "new_device", ip: "192.168.1.119", mac: "A8:A1:59:60:49:23", message: "New device connected" }
-  ],
   events: [
     { time: "17:41:30", port: "LIVE", senderIp: "192.168.86.38", senderMac: "84:F3:EB:F1:98:E4", reason: "Subnet mismatch" },
     { time: "17:41:30", port: "LIVE", senderIp: "192.168.86.42", senderMac: "84:C0:EF:1E:A8:4E", reason: "Subnet mismatch" },
     { time: "17:41:33", port: "LIVE", senderIp: "192.168.86.37", senderMac: "CC:50:E3:E5:68:70", reason: "Subnet mismatch" },
     { time: "17:41:35", port: "LIVE", senderIp: "192.168.86.41", senderMac: "84:F3:EB:F1:39:24", reason: "Subnet mismatch" }
   ],
-  eventsBackup: [
-    { time: "17:41:30", port: "LIVE", senderIp: "192.168.86.38", senderMac: "84:F3:EB:F1:98:E4", reason: "Subnet mismatch" },
-    { time: "17:41:30", port: "LIVE", senderIp: "192.168.86.42", senderMac: "84:C0:EF:1E:A8:4E", reason: "Subnet mismatch" },
-    { time: "17:41:33", port: "LIVE", senderIp: "192.168.86.37", senderMac: "CC:50:E3:E5:68:70", reason: "Subnet mismatch" },
-    { time: "17:41:35", port: "LIVE", senderIp: "192.168.86.41", senderMac: "84:F3:EB:F1:39:24", reason: "Subnet mismatch" }
-  ],
   syslog: [
-    { time: "17:44:10", source: "sw-core", message: "%SW_DAI-4-DHCP_SNOOPING_DENY: 1 Invalid ARPs (Req) on Vlan 1, from 84:C0:EF:1E:A8:4E/192.168.1.42 to ff:ff:ff:ff:ff:ff/192.168.1.1" },
-    { time: "17:44:10", source: "sw-core", message: "Ethernet src 84:C0:EF:1E:A8:4E dst ff:ff:ff:ff:ff:ff" },
-    { time: "17:44:10", source: "sw-core", message: "ARP request from 192.168.1.42 for 192.168.1.1 vlan 1" },
-    { time: "17:45:03", source: "sw-edge", message: "%LINK-3-UPDOWN: Interface Gi0/1, changed state to up" }
-  ],
-  syslogBackup: [
     { time: "17:44:10", source: "sw-core", message: "%SW_DAI-4-DHCP_SNOOPING_DENY: 1 Invalid ARPs (Req) on Vlan 1, from 84:C0:EF:1E:A8:4E/192.168.1.42 to ff:ff:ff:ff:ff:ff/192.168.1.1" },
     { time: "17:44:10", source: "sw-core", message: "Ethernet src 84:C0:EF:1E:A8:4E dst ff:ff:ff:ff:ff:ff" },
     { time: "17:44:10", source: "sw-core", message: "ARP request from 192.168.1.42 for 192.168.1.1 vlan 1" },
@@ -186,13 +168,18 @@ function renderOverview() {
     </div>
   `;
 
-  el("resetOverviewBtn").addEventListener("click", () => {
-    demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
-    demoData.alerts = [];
-    demoData.events = [];
-    demoData.syslog = [];
-    renderAll();
-  });
+  setTimeout(() => {
+    const resetBtn = el("resetOverviewBtn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
+        demoData.alerts = [];
+        demoData.events = [];
+        demoData.syslog = [];
+        renderAll();
+      });
+    }
+  }, 0);
 }
 
 function renderDevices() {
@@ -224,7 +211,7 @@ function renderDevices() {
         </div>
       </div>
       <div class="section-tools">
-        <span class="btn btn-ghost">Scan Now</span>
+        <button id="scanNowBtn" class="btn btn-ghost">Scan Now</button>
         <button id="resetDevicesBtn" class="btn btn-ghost">Reset</button>
       </div>
     </div>
@@ -254,16 +241,28 @@ function renderDevices() {
     )}
   `;
 
-  el("deviceSearchInput").value = search;
-  el("deviceSearchInput").addEventListener("input", renderDevices);
-  document.querySelectorAll("[data-filter]").forEach(button => {
-    button.addEventListener("click", () => setFilter(button.dataset.filter));
-  });
+  setTimeout(() => {
+    el("deviceSearchInput").value = search;
+    el("deviceSearchInput").addEventListener("input", renderDevices);
+    document.querySelectorAll("[data-filter]").forEach(button => {
+      button.addEventListener("click", () => setFilter(button.dataset.filter));
+    });
 
-  el("resetDevicesBtn").addEventListener("click", () => {
-    demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
-    renderDevices();
-  });
+    const resetBtn = el("resetDevicesBtn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
+        renderDevices();
+      });
+    }
+
+    const scanBtn = el("scanNowBtn");
+    if (scanBtn) {
+      scanBtn.addEventListener("click", () => {
+        setView("scan");
+      });
+    }
+  }, 0);
 }
 
 function renderAlerts() {
@@ -284,10 +283,15 @@ function renderAlerts() {
     )}
   `;
 
-  el("resetAlertsBtn").addEventListener("click", () => {
-    demoData.alerts = [];
-    renderAlerts();
-  });
+  setTimeout(() => {
+    const resetBtn = el("resetAlertsBtn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        demoData.alerts = [];
+        renderAlerts();
+      });
+    }
+  }, 0);
 }
 
 function renderEvents() {
@@ -308,10 +312,15 @@ function renderEvents() {
     )}
   `;
 
-  el("resetEventsBtn").addEventListener("click", () => {
-    demoData.events = [];
-    renderEvents();
-  });
+  setTimeout(() => {
+    const resetBtn = el("resetEventsBtn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        demoData.events = [];
+        renderEvents();
+      });
+    }
+  }, 0);
 }
 
 function renderSyslog() {
@@ -332,10 +341,15 @@ function renderSyslog() {
     )}
   `;
 
-  el("resetSyslogBtn").addEventListener("click", () => {
-    demoData.syslog = [];
-    renderSyslog();
-  });
+  setTimeout(() => {
+    const resetBtn = el("resetSyslogBtn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        demoData.syslog = [];
+        renderSyslog();
+      });
+    }
+  }, 0);
 }
 
 function renderScan() {
@@ -382,15 +396,17 @@ function renderScan() {
     </div>
   `;
 
-  // Add event listeners
-  el("runScanBtn").addEventListener("click", () => {
-    const scanResultsDiv = el("scanResults");
-    const newScan = {
-      label: "Network Scan",
-      status: "done",
-      started: new Date().toLocaleString(),
-      cmd: "nmap -O --osscan-limit -PR 192.168.1.0/24",
-      output: `Nmap scan report for 192.168.1.254
+  setTimeout(() => {
+    const runBtn = el("runScanBtn");
+    if (runBtn) {
+      runBtn.addEventListener("click", () => {
+        const scanResultsDiv = el("scanResults");
+        const newScan = {
+          label: "Network Scan",
+          status: "done",
+          started: new Date().toLocaleString(),
+          cmd: "nmap -O --osscan-limit -PR 192.168.1.0/24",
+          output: `Nmap scan report for 192.168.1.254
 Host is up (0.0010s latency).
 MAC Address: 50:95:51:93:A2:C8 (Router)
 Device type: broadband router
@@ -401,46 +417,45 @@ MAC Address: A8:A1:59:60:49:23 (Raspberry Pi)
 OS details: Linux 5.X
 
 Scan completed at ${new Date().toLocaleTimeString()}`
-    };
-    
-    scanResultsDiv.innerHTML += `
-      <div class="scan-result">
-        <div class="scan-head">
-          <div class="scan-meta">
-            <span class="scan-status done">${esc(newScan.status)}</span>
-            <span>${esc(newScan.label)}</span>
-            <span>${esc(newScan.cmd)}</span>
+        };
+        
+        scanResultsDiv.innerHTML += `
+          <div class="scan-result">
+            <div class="scan-head">
+              <div class="scan-meta">
+                <span class="scan-status done">${esc(newScan.status)}</span>
+                <span>${esc(newScan.label)}</span>
+                <span>${esc(newScan.cmd)}</span>
+              </div>
+              <span class="top-timestamp">${esc(newScan.started)}</span>
+            </div>
+            <div class="scan-output">
+              <pre>${esc(newScan.output)}</pre>
+            </div>
           </div>
-          <span class="top-timestamp">${esc(newScan.started)}</span>
-        </div>
-        <div class="scan-output">
-          <pre>${esc(newScan.output)}</pre>
-        </div>
-      </div>
-    `;
-  });
+        `;
+      });
+    }
 
-  el("clearScanBtn").addEventListener("click", () => {
-    el("scanResults").innerHTML = '';
-  });
+    const clearBtn = el("clearScanBtn");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        el("scanResults").innerHTML = '';
+      });
+    }
 
-  el("resetDataBtn").addEventListener("click", () => {
-    // Clear devices, restore from backup, clear names
-    demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
-    
-    // Clear syslog
-    demoData.syslog = [];
-    
-    // Clear alerts and events
-    demoData.alerts = [];
-    demoData.events = [];
-    
-    // Clear scan results
-    el("scanResults").innerHTML = '';
-    
-    // Re-render all views
-    renderAll();
-  });
+    const resetBtn = el("resetDataBtn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        demoData.devices = demoData.devicesBackup.map(d => ({ ...d, name: "" }));
+        demoData.syslog = [];
+        demoData.alerts = [];
+        demoData.events = [];
+        el("scanResults").innerHTML = '';
+        renderAll();
+      });
+    }
+  }, 0);
 }
 
 function renderSettings() {
